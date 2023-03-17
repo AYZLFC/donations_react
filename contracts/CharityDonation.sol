@@ -11,6 +11,9 @@ contract CharityDonation {
     mapping(address => uint) public totalDonationsByDonor;
     mapping(address => uint) public totalDonationsByCharity;
     mapping(address => uint) public charitiesMatchedAmount;
+    mapping(address => string) public charitiesNames;
+    mapping(uint => string) private lutCharitiesNames;
+
     uint public numberOfDonors;
     uint public numberOfCharities;
 
@@ -23,12 +26,23 @@ contract CharityDonation {
         contractOwner = payable(newOwner);
     }
 
-    function addCharity(address _charity) public {
-        require(msg.sender == contractOwner, "Only the contract owner can add charities.");
-        charities[_charity] = true;
-        uint charitiesIndex = numberOfCharities++;
-        lutCharities[charitiesIndex]=_charity;
-        charitiesMatchedAmount[_charity] = 0;
+    modifier onlyOwner(){
+        require(msg.sender == contractOwner, "Only the owner can do that");
+        _;
+    }
+
+    function addCharity( address _charity , string memory _charityName ) public onlyOwner {
+        require(!charities[_charity], "This charity already exist!");
+        
+            charities[_charity] = true;
+            charitiesNames[_charity] = _charityName;
+            uint charitiesIndex = numberOfCharities++;
+            lutCharities[charitiesIndex] = _charity;
+            lutCharitiesNames[charitiesIndex] = _charityName;
+            charitiesMatchedAmount[_charity] = 0;
+            donations[_charity] = 0;
+            totalDonationsByCharity[_charity] = 0;
+            
     }
 
     // The donation function
@@ -38,9 +52,10 @@ contract CharityDonation {
         uint matchedAmount = msg.value;
         charitiesMatchedAmount[_charity] += matchedAmount;
         if (!Donors[msg.sender]){
-            uint fundersIndex = numberOfDonors++;
+            uint DonorsIndex = numberOfDonors++;
             Donors[msg.sender]=true;
-            lutDonors[fundersIndex]=msg.sender;
+            lutDonors[DonorsIndex]=msg.sender;
+             totalDonationsByDonor[msg.sender] = 0;
         }
         donations[_charity] += msg.value;
         totalDonationsByDonor[msg.sender] += msg.value;
@@ -72,12 +87,14 @@ contract CharityDonation {
     }
 
     //Show all charities
-    function getAllCharities() public view returns(address[] memory) {
+    function getAllCharities() public view returns(address[] memory , string[] memory ) {
         address[] memory _Charities = new address[](numberOfCharities);
+        string[] memory  _CharitiesNames = new string[](numberOfCharities);
         for(uint i=0; i<numberOfCharities; i++){
             _Charities[i]=lutCharities[i];
+             _CharitiesNames[i] = lutCharitiesNames[i];
         }
-        return _Charities;
+        return (_Charities, _CharitiesNames );    
     }
     
     //Shows all donors
@@ -133,3 +150,8 @@ contract CharityDonation {
 
 
 }
+
+
+// const instance = await CharityDonation.deployed()
+// instance.addCharity("0x197455e3eEf7dA7302ac524a97e3Ca041cEd154D","Moses's Charity") 
+// instance.getAllCharities()
