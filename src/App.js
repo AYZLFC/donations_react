@@ -13,6 +13,7 @@ function App() {
   const [newCharityName,setNewCharityName] = useState('')
   const [charitiesAddressListSolidity, setCharitiesAddressListSolidity] = useState([])
   const [charitiesNamesListSolidity, setCharitiesNamesListSolidity] = useState([])
+  const [charitiesMatchedAmountListSolidity, setCharitiesMatchedAmountListSolidity] = useState([])
   const [errorMessage, setErrorMessage] = useState('');
   const [newContractOwner, setNewContractOwner] = useState('')
   const [selectedCharity, setSelectedCharity] = useState('');
@@ -76,11 +77,17 @@ function App() {
       setCharitiesNamesListSolidity(getAllCharities[1])
     }    
     web3Api.contract && loadCharitiesList()
-    //console.log(charitiesListSolidity)
 
   },[web3Api])
 
- 
+  useEffect(()=>{
+    const loadMatchedAmountList = async () => {
+      getAllCharitiesMatchedAmount()
+    }    
+    
+    web3Api.contract && loadMatchedAmountList()
+
+  },[web3Api])
   
 
   function handleNewContractOwner(event){
@@ -109,13 +116,16 @@ function App() {
   }
 
   const addCharity = async () => {
-    const { contract } = web3Api
+    const { contract, web3 } = web3Api
     try {
       await contract.addCharity(newCharityAddress, newCharityName, { from: account })
       const getAllCharities =  await contract.getAllCharities()
       setCharitiesAddressListSolidity(getAllCharities[0])
       setCharitiesNamesListSolidity(getAllCharities[1])
-  
+
+      getAllCharitiesMatchedAmount()
+    
+
     } catch (error) {
        const errorStr = error.message.slice(24)
        const errorObj = JSON.parse(errorStr)
@@ -123,32 +133,69 @@ function App() {
       }
       setNewCharityName('') //Clear fields
       setNewCharityAddress('') //Clear fields
-  };
+  }
 
  
 
 
   const addDonation = async () => {
     const {contract,web3} = web3Api
-    const charityAddressIndex = charitiesNamesListSolidity.indexOf(selectedCharity)
-    const charityAddress = charitiesAddressListSolidity[charityAddressIndex]
-    await contract.donate(charityAddress,{ 
-      from:account,
-      value:web3.utils.toWei(donationAmount,"ether")} )
+    try {
+      const charityAddressIndex = charitiesNamesListSolidity.indexOf(selectedCharity)
+      const charityAddress = charitiesAddressListSolidity[charityAddressIndex]
+      await contract.donate(charityAddress,{ 
+        from:account,
+        value:web3.utils.toWei(donationAmount,"ether")} )
       setDonationAmount('')
-      
 
+      getAllCharitiesMatchedAmount()
+      
+    
+    }catch (error) {
+      const errorStr = error.message.slice(24)
+      const errorObj = JSON.parse(errorStr)
+      setErrorMessage(errorObj.message)    
+    }
+    
   }
 
 
   const handleSelectedCharity = (event) => {
     setSelectedCharity(event.target.value);
-  };
+  }
 
   
   function handleDonationAmount(event) {
     setDonationAmount(event.target.value)
   }
+
+  const sendMatchedAmount = async () => {
+    const {contract,web3} = web3Api
+    const sumMatchedAmount = (await getAllCharitiesMatchedAmount()).toString()
+    
+
+    await contract.matchTheDonations({ 
+      from:account,
+      value:web3.utils.toWei(sumMatchedAmount,"ether")})
+      
+    getAllCharitiesMatchedAmount()
+  }
+  
+  const getAllCharitiesMatchedAmount = async () => {
+    const {contract,web3} = web3Api
+    
+    const getAllCharitiesMatchedAmount =  await contract.getAllCharitiesAndMatchedAmount()
+    const matchedAmounts = getAllCharitiesMatchedAmount[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString()))
+    setCharitiesMatchedAmountListSolidity(matchedAmounts)
+    
+    const sumMatchedAmount = Number(web3.utils.fromWei(getAllCharitiesMatchedAmount[2],"ether").toString())
+    return(sumMatchedAmount)
+  } 
+
+
+
+
+  
 
   return (
     <div className="App">
@@ -157,8 +204,10 @@ function App() {
 
       <div>
         Donation Amount: 
-      <input  value={donationAmount} type='number' onChange={handleDonationAmount}></input>
-        <button onClick={addDonation}>Donate {donationAmount} Ether</button></div>
+      <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
+        <button onClick={addDonation}>Donate {donationAmount} Ether</button>
+      </div>
+      
       <div>
         New Charity's Name: 
         <input value={newCharityName} onChange={handleNewCharityName}></input>
@@ -169,6 +218,7 @@ function App() {
       
 
       <div>
+        Charities address list:
         <ul>
           {charitiesAddressListSolidity.map(
             charity => (
@@ -178,6 +228,18 @@ function App() {
           }
         </ul>
       </div>    
+
+      <div>
+        Charities matched amounts:
+        <ul>
+          {charitiesMatchedAmountListSolidity.map(
+            amount => (
+              <li>{amount}</li>
+            )
+          )
+          }
+        </ul>
+      </div> 
 
       <div>
       {errorMessage && (
@@ -208,7 +270,7 @@ function App() {
       <p>You selected: {selectedCharity}</p>
     </div>
 
-
+    <button onClick={sendMatchedAmount}>Match All Amounts!</button>
   
     </div>
   );
