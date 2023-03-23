@@ -21,16 +21,25 @@ contract CharityDonation {
         contractOwner = payable(msg.sender); 
     }
 
-    function transferOwnership(address newOwner) external {
-        require(msg.sender == contractOwner, "Only the contract owner can change the contract owner.");
-        contractOwner = payable(newOwner);
-    }
-
     modifier onlyOwner(){
         require(msg.sender == contractOwner, "Only the owner can do that");
         _;
     }
 
+
+
+    function transferOwnership(address newOwner) external onlyOwner {
+        //require(msg.sender == contractOwner, "Only the contract owner can change the contract owner.");
+        contractOwner = payable(newOwner);
+    }
+
+    // View of the contract owner adrress
+    function contractOwnerAddress() public view returns(address ) {
+        
+        return (contractOwner );
+    }
+
+    //Add new charity to the contract
     function addCharity( address _charity , string memory _charityName ) public onlyOwner {
         require(!charities[_charity], "This charity already exist!");
         

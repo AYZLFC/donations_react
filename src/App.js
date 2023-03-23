@@ -22,6 +22,8 @@ function App() {
   const [donorsDonationsList, setDonorsDonationsList] = useState([])
   const [charitiesDonationsList, setCharitiesDonationsList] = useState([])
   const [charitiesTotalDonationsList, setCharitiesTotalDonationsList] = useState([])
+  const [contractOwnerAddress, setContractOwnerAddress] = useState('')
+  
   
   
 // Load provider (MetaMask) and the contract
@@ -64,7 +66,8 @@ function App() {
         getAllCharitiesMatchedAmount() &&
           loadDonorsAndDonations() &&
             loadAllCharitiesAndDonations() &&
-              loadCharitiesAndTotalDonationsByCharity()
+              loadCharitiesAndTotalDonationsByCharity() &&
+                loadContractOwnerAddress()    
 
 
   },[web3Api])
@@ -104,6 +107,7 @@ function App() {
     const { contract } = web3Api
     try {
       await contract.transferOwnership(newContractOwner, { from: account })
+      loadContractOwnerAddress()
       
     } catch (error) {
       //customize error message:
@@ -269,6 +273,12 @@ function App() {
     setCharitiesTotalDonationsList(getAllCharitiesAndTotalDonationsByCharity[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString())))
   }
 
+  const loadContractOwnerAddress = async () => {
+    const {contract} = web3Api
+    const getContractOwnerAddress =  await contract.contractOwnerAddress()
+    setContractOwnerAddress(getContractOwnerAddress)
+  }
+
 
 // Retrun of the component ('jsx' code below), subject seperated by divs:
 //_______________________________________________________________________
@@ -279,25 +289,39 @@ function App() {
       
       <div> Check that your account is {account} </div>  
 
+      
+
+      <div>
+        <label htmlFor="dropdown">Select a charity: </label>
+        <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
+        <option value="" disabled selected hidden>
+          Select a charity...
+        </option>
+        {/* Map over options and create <option> elements */}
+        {charitiesNamesList.map(
+          option => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+          )
+        )}
+        </select>
+        <p>You selected: {selectedCharity}</p>
+      </div>
+      
       <div>
         Donation Amount: 
         <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
         <button onClick={addDonation}>Donate {donationAmount} Ether</button>
       </div>
-      
-      
+
+
       <div>
-        You are the charity? Withdraw your donations! 
+        Are you the charity? Withdraw your donations! 
         <button onClick={withdraw}>Withdraw Donations!</button>
       </div>
 
-      <div>
-        New Charity's Name: 
-        <input value={newCharityName} onChange={handleNewCharityName}></input>
-        New Charit's Address:
-        <input value={newCharityAddress} onChange={handleNewCharityAddress}></input>
-        <button onClick={addCharity}>Add new charity</button>
-      </div>
+      
       
 
       <div>
@@ -338,17 +362,7 @@ function App() {
       </div>
 
 
-      <div>
-        Charities matched amounts:
-        <ul>
-          {charitiesMatchedAmountList.map(
-            amount => (
-              <li>{amount}</li>
-            )
-          )
-          }
-        </ul>
-      </div> 
+       
       
       <div>
         Donors Adress and their Donations:
@@ -370,42 +384,56 @@ function App() {
         </ul> 
       </div> 
 
-
       <div>
         {errorMessage && (
           <p style={{ color: 'red' }}>{errorMessage}</p>
         )}
       </div>
   
-
       <div>
-        <input value={newContractOwner} onChange={handleNewContractOwner}></input>
-        <button onClick={transferOwnership}>Change Contract Owner</button>
-      </div>
-        
-
-      <div>
-        <label htmlFor="dropdown">Select a charity: </label>
-        <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
-        <option value="" disabled selected hidden>
-          Select a charity...
-        </option>
-        {/* Map over options and create <option> elements */}
-        {charitiesNamesList.map(
-          option => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-          )
+        { account === contractOwnerAddress && (    
+          <div>
+            New Charity's Name: 
+            <input value={newCharityName} onChange={handleNewCharityName}></input>
+            New Charit's Address:
+            <input value={newCharityAddress} onChange={handleNewCharityAddress}></input>
+            <button onClick={addCharity}>Add new charity</button>
+          </div>
         )}
-        </select>
-        <p>You selected: {selectedCharity}</p>
       </div>
+      
+      <div>
+        { account === contractOwnerAddress && (
+        <div>  
+          Insert new contract owner:
+          <input value={newContractOwner} onChange={handleNewContractOwner}></input>
+          <button onClick={transferOwnership}>Change Contract Owner</button>
+        </div>
+        )}
+      </div>
+    
 
       <div>
-        <button onClick={sendMatchedAmount}>Match All Amounts!</button>
+        Charities matched amounts:
+        <ul>
+          {charitiesMatchedAmountList.map(
+            amount => (
+              <li>{amount}</li>
+            )
+          )
+          }
+        </ul>
       </div>
-    </div>
+    
+      <div>
+        { account === contractOwnerAddress && (
+        <div>
+          <button onClick={sendMatchedAmount}>Match All Amounts!</button>
+        </div>
+        )}
+      </div>
+    
+    </div>   
   );
 }
 
