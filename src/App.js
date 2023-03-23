@@ -18,7 +18,8 @@ function App() {
   const [newContractOwner, setNewContractOwner] = useState('')
   const [selectedCharity, setSelectedCharity] = useState('');
   const [donationAmount, setDonationAmount] = useState('')
-  
+  const [donorsAddressList, setDonorsAddressList] = useState([])
+  const [donorsDonationsList, setDonorsDonationsList] = useState([])
   
 
   const [web3Api, setWeb3Api] = useState({
@@ -85,9 +86,10 @@ function App() {
       getAllCharitiesMatchedAmount()
     }    
     
-    web3Api.contract && loadMatchedAmountList()
+    web3Api.contract && loadMatchedAmountList() && loadDonorsAndDonations()
 
   },[web3Api])
+  
   
 
   function handleNewContractOwner(event){
@@ -192,6 +194,12 @@ function App() {
     return(sumMatchedAmount)
   } 
 
+  const loadDonorsAndDonations = async () => {
+    const {contract, web3} = web3Api
+    const getAllDonorsAndDonations =  await contract.getAllDonorsAndDonations()
+    setDonorsAddressList(getAllDonorsAndDonations[0])
+    setDonorsDonationsList(getAllDonorsAndDonations[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString())))
+  }
 
 
 
@@ -240,6 +248,27 @@ function App() {
           }
         </ul>
       </div> 
+      
+      <div>
+        Donors Adress and their Donations:
+        <ul>
+          {donorsAddressList.map(
+            address => (
+              <li>{address}</li>
+            )
+          )
+          }
+        </ul>
+        <ul>
+          {donorsDonationsList.map(
+            donations => (
+              <li>{donations}</li>
+            )
+          )
+          }
+        </ul> 
+      </div> 
+
 
       <div>
       {errorMessage && (
