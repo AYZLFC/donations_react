@@ -59,7 +59,7 @@ function App() {
 // Load lists and other states from contract
 //__________________________________________
   useEffect(()=>{
-       
+    
     web3Api.contract && getAccount() &&
      loadBalance() &&
        loadCharitiesList() &&
@@ -315,10 +315,13 @@ function App() {
         <button onClick={addDonation}>Donate {donationAmount} Ether</button>
       </div>
 
-
       <div>
-        Are you the charity? Withdraw your donations! 
-        <button onClick={withdraw}>Withdraw Donations!</button>
+        { charitiesAddressList.includes(account) && (
+          <div>
+            Do you the charity? Withdraw your donations! 
+            <button onClick={withdraw}>Withdraw Donations!</button>
+          </div>
+        )}
       </div>
 
       
