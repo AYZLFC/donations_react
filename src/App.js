@@ -11,9 +11,9 @@ function App() {
   const [account, setAccount] = useState(null)
   const [newCharityAddress,setNewCharityAddress] = useState('')
   const [newCharityName,setNewCharityName] = useState('')
-  const [charitiesAddressListSolidity, setCharitiesAddressListSolidity] = useState([])
-  const [charitiesNamesListSolidity, setCharitiesNamesListSolidity] = useState([])
-  const [charitiesMatchedAmountListSolidity, setCharitiesMatchedAmountListSolidity] = useState([])
+  const [charitiesAddressList, setCharitiesAddressList] = useState([])
+  const [charitiesNamesList, setCharitiesNamesList] = useState([])
+  const [charitiesMatchedAmountList, setCharitiesMatchedAmountList] = useState([])
   const [errorMessage, setErrorMessage] = useState('');
   const [newContractOwner, setNewContractOwner] = useState('')
   const [selectedCharity, setSelectedCharity] = useState('');
@@ -24,7 +24,8 @@ function App() {
   const [charitiesTotalDonationsList, setCharitiesTotalDonationsList] = useState([])
   
   
-
+// Load provider (MetaMask) and the contract
+//__________________________________________
   const [web3Api, setWeb3Api] = useState({
     provider:null,
     web3:null,
@@ -52,9 +53,11 @@ function App() {
     loadProvider()
   },[])
 
+
+// Load lists and other states from contract
+//__________________________________________
   useEffect(()=>{
-     
-    
+       
     web3Api.contract && getAccount() &&
      loadBalance() &&
        loadCharitiesList() &&
@@ -68,22 +71,13 @@ function App() {
   
   
 
+// 'handle' functions - handle the inputs values
+//______________________________________________
   function handleNewContractOwner(event){
     setNewContractOwner(event.target.value)
   }
 
-  const transferOwnership = async () => {
-    const { contract } = web3Api
-    try {
-      await contract.transferOwnership(newContractOwner, { from: account })
-      
-    } catch (error) {
-       const errorStr = error.message.slice(24)
-       const errorObj = JSON.parse(errorStr)
-       setErrorMessage(errorObj.message)    
-      }
-  };
-
+  
   function handleNewCharityName(event){
     setNewCharityName(event.target.value)
   }
@@ -93,13 +87,40 @@ function App() {
     setNewCharityAddress(event.target.value)
   }
 
+  const handleSelectedCharity = (event) => {
+    setSelectedCharity(event.target.value);
+  }
+
+  
+  function handleDonationAmount(event) {
+    setDonationAmount(event.target.value)
+  }
+
+
+
+// Implementation of contract's core functions 
+//____________________________________________
+  const transferOwnership = async () => {
+    const { contract } = web3Api
+    try {
+      await contract.transferOwnership(newContractOwner, { from: account })
+      
+    } catch (error) {
+      //customize error message:
+       const errorStr = error.message.slice(24)
+       const errorObj = JSON.parse(errorStr)
+       setErrorMessage(errorObj.message)    
+      }
+  };
+
+
   const addCharity = async () => {
-    const { contract, web3 } = web3Api
+    const { contract} = web3Api
     try {
       await contract.addCharity(newCharityAddress, newCharityName, { from: account })
       const getAllCharities =  await contract.getAllCharities()
-      setCharitiesAddressListSolidity(getAllCharities[0])
-      setCharitiesNamesListSolidity(getAllCharities[1])
+      setCharitiesAddressList(getAllCharities[0])
+      setCharitiesNamesList(getAllCharities[1])
 
       //Updating states:
       getAllCharitiesMatchedAmount()
@@ -108,24 +129,23 @@ function App() {
       loadCharitiesAndTotalDonationsByCharity()
       loadBalance()
 
-
     } catch (error) {
+      //customize error message:
        const errorStr = error.message.slice(24)
        const errorObj = JSON.parse(errorStr)
        setErrorMessage(errorObj.message)    
       }
+
       setNewCharityName('') //Clear fields
       setNewCharityAddress('') //Clear fields
   }
 
  
-
-
   const addDonation = async () => {
     const {contract,web3} = web3Api
     try {
-      const charityAddressIndex = charitiesNamesListSolidity.indexOf(selectedCharity)
-      const charityAddress = charitiesAddressListSolidity[charityAddressIndex]
+      const charityAddressIndex = charitiesNamesList.indexOf(selectedCharity)
+      const charityAddress = charitiesAddressList[charityAddressIndex]
       await contract.donate(charityAddress,{ 
         from:account,
         value:web3.utils.toWei(donationAmount,"ether")} )
@@ -137,26 +157,22 @@ function App() {
        loadAllCharitiesAndDonations()
        loadCharitiesAndTotalDonationsByCharity()
        loadBalance()
-
-      
-    
+  
     }catch (error) {
+      //customize error message:
       const errorStr = error.message.slice(24)
       const errorObj = JSON.parse(errorStr)
       setErrorMessage(errorObj.message)    
     }
-    
   }
 
-  const withdraw = async () => {
-    const {contract,web3} = web3Api
-    try {
-      // const charityAddressIndex = charitiesNamesListSolidity.indexOf(selectedCharity)
-      // const charityAddress = charitiesAddressListSolidity[charityAddressIndex]
-      await contract.withdraw({ 
-        from:account} )
-      
 
+  const withdraw = async () => {
+    const {contract} = web3Api
+    try {
+      await contract.withdraw({ 
+        from:account})
+      
        //Update states:
        getAllCharitiesMatchedAmount()
        loadDonorsAndDonations()
@@ -164,31 +180,19 @@ function App() {
        loadCharitiesAndTotalDonationsByCharity()
        loadBalance()
 
-      
-    
     }catch (error) {
+      //customize error message:
       const errorStr = error.message.slice(24)
       const errorObj = JSON.parse(errorStr)
       setErrorMessage(errorObj.message)    
-    }
-    
+    }  
   }
 
-
-  const handleSelectedCharity = (event) => {
-    setSelectedCharity(event.target.value);
-  }
-
-  
-  function handleDonationAmount(event) {
-    setDonationAmount(event.target.value)
-  }
 
   const sendMatchedAmount = async () => {
     const {contract,web3} = web3Api
     const sumMatchedAmount = (await getAllCharitiesMatchedAmount()).toString()
-    
-
+    try {
     await contract.matchTheDonations({ 
       from:account,
       value:web3.utils.toWei(sumMatchedAmount,"ether")})
@@ -198,12 +202,24 @@ function App() {
     loadAllCharitiesAndDonations()
     loadCharitiesAndTotalDonationsByCharity()
     loadBalance()
+
+    }catch (error) {
+      //customize error message:
+      const errorStr = error.message.slice(24)
+      const errorObj = JSON.parse(errorStr)
+      setErrorMessage(errorObj.message)    
+    }  
   }
   
+
+
+// 'get data' functions - extract data from contract (like 'view' functions)
+//__________________________________________________________________________
   const getAccount = async () => {
     const accounts = await web3Api.web3.eth.getAccounts()
     setAccount(accounts[0])
   }
+
 
   const loadBalance = async () => {
     const {contract,web3} = web3Api
@@ -215,20 +231,22 @@ function App() {
   const loadCharitiesList = async () => {
     const {contract} = web3Api
     const getAllCharities =  await contract.getAllCharities()
-    setCharitiesAddressListSolidity(getAllCharities[0])
-    setCharitiesNamesListSolidity(getAllCharities[1])
+    setCharitiesAddressList(getAllCharities[0])
+    setCharitiesNamesList(getAllCharities[1])
   } 
+
 
   const getAllCharitiesMatchedAmount = async () => {
     const {contract,web3} = web3Api
     
     const getAllCharitiesMatchedAmount =  await contract.getAllCharitiesAndMatchedAmount()
     const matchedAmounts = getAllCharitiesMatchedAmount[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString()))
-    setCharitiesMatchedAmountListSolidity(matchedAmounts)
+    setCharitiesMatchedAmountList(matchedAmounts)
     
     const sumMatchedAmount = Number(web3.utils.fromWei(getAllCharitiesMatchedAmount[2],"ether").toString())
     return(sumMatchedAmount)
   } 
+
 
   const loadDonorsAndDonations = async () => {
     const {contract, web3} = web3Api
@@ -237,11 +255,13 @@ function App() {
     setDonorsDonationsList(getAllDonorsAndDonations[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString())))
   }
 
+
   const loadAllCharitiesAndDonations = async () => {
     const {contract, web3} = web3Api
     const getAllCharitiesAndDonations =  await contract.getAllCharitiesAndDonations()
     setCharitiesDonationsList(getAllCharitiesAndDonations[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString())))
   }
+
 
   const loadCharitiesAndTotalDonationsByCharity = async () => {
     const {contract, web3} = web3Api
@@ -249,14 +269,19 @@ function App() {
     setCharitiesTotalDonationsList(getAllCharitiesAndTotalDonationsByCharity[1].map(bn => Number(web3.utils.fromWei(bn,"ether").toString())))
   }
 
+
+// Retrun of the component ('jsx' code below), subject seperated by divs:
+//_______________________________________________________________________
+  
   return (
     <div className="App">
       <div> Current Balance is {balance} Ether </div>  
+      
       <div> Check that your account is {account} </div>  
 
       <div>
         Donation Amount: 
-      <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
+        <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
         <button onClick={addDonation}>Donate {donationAmount} Ether</button>
       </div>
       
@@ -278,7 +303,7 @@ function App() {
       <div>
         Charities address list:
         <ul>
-          {charitiesAddressListSolidity.map(
+          {charitiesAddressList.map(
             charity => (
               <li>{charity}</li>
             )
@@ -299,7 +324,6 @@ function App() {
         </ul>
       </div> 
 
-      charitiesTotalDonationsList
 
       <div>
         Charities Total Donations Balance:
@@ -313,10 +337,11 @@ function App() {
         </ul>
       </div>
 
+
       <div>
         Charities matched amounts:
         <ul>
-          {charitiesMatchedAmountListSolidity.map(
+          {charitiesMatchedAmountList.map(
             amount => (
               <li>{amount}</li>
             )
@@ -347,36 +372,39 @@ function App() {
 
 
       <div>
-      {errorMessage && (
-        <p style={{ color: 'red' }}>{errorMessage}</p>
-      )}
+        {errorMessage && (
+          <p style={{ color: 'red' }}>{errorMessage}</p>
+        )}
       </div>
   
-    <div>
+
+      <div>
         <input value={newContractOwner} onChange={handleNewContractOwner}></input>
         <button onClick={transferOwnership}>Change Contract Owner</button>
       </div>
         
 
       <div>
-      <label htmlFor="dropdown">Select a charity: </label>
-      <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
+        <label htmlFor="dropdown">Select a charity: </label>
+        <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
         <option value="" disabled selected hidden>
-        Select a charity...
+          Select a charity...
         </option>
         {/* Map over options and create <option> elements */}
-        {charitiesNamesListSolidity.map(
+        {charitiesNamesList.map(
           option => (
           <option key={option} value={option}>
             {option}
           </option>
-        ))}
-      </select>
-      <p>You selected: {selectedCharity}</p>
-    </div>
+          )
+        )}
+        </select>
+        <p>You selected: {selectedCharity}</p>
+      </div>
 
-    <button onClick={sendMatchedAmount}>Match All Amounts!</button>
-  
+      <div>
+        <button onClick={sendMatchedAmount}>Match All Amounts!</button>
+      </div>
     </div>
   );
 }
