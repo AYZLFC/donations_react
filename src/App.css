@@ -1,38 +1,267 @@
-.App {
+:root {
+  --primary-color: #004c99;
+  --secondary-color: #28a745;
+  --light-gray: #f5f5f5;
+  --dark-gray: #333333;
+}
+
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 2rem;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover,
+button:focus {
+  background-color: var(--secondary-color);
+}
+
+.donors {
+  background-color: var(--light-gray);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.donors h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.donors ul {
+  list-style: none;
+}
+
+.donors ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.donors ul li span {
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+}
+
+.form {
+  background-color: var(--light-gray);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.form input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.form button {
+  margin-top: 1rem;
+}
+
+.charities {
+  background-color: var(--light-gray);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.charities h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.charities ul {
+  list-style: none;
+}
+
+.charities ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.charities ul li span {
+  font-weight: bold;
+}
+
+.match {
+  margin-top: 1rem;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.match button {
+  background-color: var(--secondary-color);
   color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.App-link {
-  color: #61dafb;
+.match button:hover,
+.match button:focus {
+  background-color: var(--dark-gray);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Set box-sizing to border-box for all elements */
+* {
+  box-sizing: border-box;
 }
+
+/* Set font family and color for all text */
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Style for the container div */
+.App {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 20px;
+}
+
+/* Style for the heading */
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+/* Style for the current balance div */
+.current-balance {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Style for the account div */
+.account {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style for the select label */
+label {
+  font-size: 18px;
+}
+
+/* Style for the select element */
+select {
+  display: block;
+  width: 100%;
+  font-size: 18px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for the selected charity text */
+.selected-charity {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style for the donation amount label */
+.donation-amount label {
+  font-size: 18px;
+}
+
+/* Style for the donation amount input */
+.donation-amount input {
+  display: block;
+  width: 100%;
+  font-size: 18px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for the donate button */
+.donation-amount button {
+  display: block;
+  width: 100%;
+  font-size: 18px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Style for the withdraw donations div */
+.withdraw-donations {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style for the withdraw donations button */
+.withdraw-donations button {
+  font-size: 18px;
+  padding: 10px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Style for the charities list */
+.charities {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style for the charities list items */
+.charities li {
+  margin-bottom: 10px;
+}
+
+/* Style for the charities balance list */
+.charities-balance {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style for the charities balance list items */
+.charities-balance li {
+  margin-bottom: 10px;
+}
+

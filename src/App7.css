@@ -1,0 +1,79 @@
+/* Set the font family, size, and color of the body text */
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  /* Set the background color of the page */
+  body {
+    background-color: #f6eeee;
+  }
+  
+  /* Set the padding and margin of the main content area */
+  .main-content {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  /* Set the border and padding of a button */
+  .button {
+    border: 1px solid #000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #CCC;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .button:hover {
+    background-color: #999;
+    color: #FFF;
+  }
+  
+  /* Set the display and alignment of a form */
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Set the font weight of a heading */
+  h1 {
+    font-weight: bold;
+  }
+  
+  /* Set the text alignment of a paragraph */
+  p {
+    text-align: justify;
+  }
+  
+  /* Set the styles of a navigation bar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #FFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .navbar-link {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+  
+  .navbar-link:hover {
+    text-decoration: underline;
+  }
