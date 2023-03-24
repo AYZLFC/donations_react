@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { loadContract } from './utils/load-contract';
+import './App6.css';
+
+
 
 
 function App() {
@@ -23,6 +26,8 @@ function App() {
   const [charitiesDonationsList, setCharitiesDonationsList] = useState([])
   const [charitiesTotalDonationsList, setCharitiesTotalDonationsList] = useState([])
   const [contractOwnerAddress, setContractOwnerAddress] = useState('')
+  
+  
   
   
   
@@ -99,7 +104,7 @@ function App() {
     setDonationAmount(event.target.value)
   }
 
-
+  
 
 // Implementation of contract's core functions 
 //____________________________________________
@@ -283,161 +288,421 @@ function App() {
 // Retrun of the component ('jsx' code below), subject seperated by divs:
 //_______________________________________________________________________
   
-  return (
-    <div className="App">
-      <div> Current Balance is {balance} Ether </div>  
+//   return (
+//     <div className="App">
+//       <div> Current Balance is {balance} Ether </div>  
       
-      <div> Check that your account is {account} </div>  
+//       <div> Check that your account is {account} </div>  
 
       
 
-      <div>
-        <label htmlFor="dropdown">Select a charity: </label>
-        <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
+//       <div>
+//         <label htmlFor="dropdown">Select a charity: </label>
+//         <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
+//         <option value="" disabled selected hidden>
+//           Select a charity...
+//         </option>
+//         {/* Map over options and create <option> elements */}
+//         {charitiesNamesList.map(
+//           option => (
+//           <option key={option} value={option}>
+//             {option}
+//           </option>
+//           )
+//         )}
+//         </select>
+//         <p>You selected: {selectedCharity}</p>
+//       </div>
+      
+//       <div>
+//         Donation Amount: 
+//         <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
+//         <button onClick={addDonation}>Donate {donationAmount} Ether</button>
+//       </div>
+
+//       <div>
+//         { charitiesAddressList.includes(account) && (
+//           <div>
+//             Do you the charity? Withdraw your donations! 
+//             <button onClick={withdraw}>Withdraw Donations!</button>
+//           </div>
+//         )}
+//       </div>
+
+      
+      
+
+//       <div>
+//         Charities address list:
+//         <ul>
+//           {charitiesAddressList.map(
+//             charity => (
+//               <li>{charity}</li>
+//             )
+//           )
+//           }
+//         </ul>
+//       </div>    
+
+//       <div>
+//         Charities Current Donations Balance:
+//         <ul>
+//           {charitiesDonationsList.map(
+//             donation => (
+//               <li>{donation}</li>
+//             )
+//           )
+//           }
+//         </ul>
+//       </div> 
+
+
+//       <div>
+//         Charities Total Donations Balance:
+//         <ul>
+//           {charitiesTotalDonationsList.map(
+//             totalDonations => (
+//               <li>{totalDonations}</li>
+//             )
+//           )
+//           }
+//         </ul>
+//       </div>
+
+
+       
+      
+//       <div>
+//         Donors Adress and their Donations:
+//         <ul>
+//           {donorsAddressList.map(
+//             address => (
+//               <li>{address}</li>
+//             )
+//           )
+//           }
+//         </ul>
+//         <ul>
+//           {donorsDonationsList.map(
+//             donations => (
+//               <li>{donations}</li>
+//             )
+//           )
+//           }
+//         </ul> 
+//       </div> 
+
+//       <div>
+//         {errorMessage && (
+//           <p style={{ color: 'red' }}>{errorMessage}</p>
+//         )}
+//       </div>
+  
+//       <div>
+//         { account === contractOwnerAddress && (    
+//           <div>
+//             New Charity's Name: 
+//             <input value={newCharityName} onChange={handleNewCharityName}></input>
+//             New Charit's Address:
+//             <input value={newCharityAddress} onChange={handleNewCharityAddress}></input>
+//             <button onClick={addCharity}>Add new charity</button>
+//           </div>
+//         )}
+//       </div>
+      
+//       <div>
+//         { account === contractOwnerAddress && (
+//         <div>  
+//           Insert new contract owner:
+//           <input value={newContractOwner} onChange={handleNewContractOwner}></input>
+//           <button onClick={transferOwnership}>Change Contract Owner</button>
+//         </div>
+//         )}
+//       </div>
+    
+
+//       <div>
+//         Charities matched amounts:
+//         <ul>
+//           {charitiesMatchedAmountList.map(
+//             amount => (
+//               <li>{amount}</li>
+//             )
+//           )
+//           }
+//         </ul>
+//       </div>
+    
+//       <div>
+//         { account === contractOwnerAddress && (
+//         <div>
+//           <button onClick={sendMatchedAmount}>Match All Amounts!</button>
+//         </div>
+//         )}
+//       </div>
+    
+//     </div>   
+//   );
+// }
+     
+
+
+
+
+return (
+  <div className="App">
+    
+    {/* <div class="balance" id="current-balance"> Current Balance is {balance} Ether </div>   */}
+
+    {/* <div class="account-check" id="account-check"> Check that your account is {account} </div>   */}
+
+    <div class="charity-select" id="charity-select">
+      <label htmlFor="dropdown">Select a charity: </label>
+      <select id="dropdown" value={selectedCharity} onChange={handleSelectedCharity}>
         <option value="" disabled selected hidden>
           Select a charity...
         </option>
         {/* Map over options and create <option> elements */}
         {charitiesNamesList.map(
           option => (
-          <option key={option} value={option}>
-            {option}
-          </option>
+            <option key={option} value={option}>
+              {option}
+            </option>
           )
         )}
-        </select>
-        <p>You selected: {selectedCharity}</p>
-      </div>
-      
-      <div>
-        Donation Amount: 
-        <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
-        <button onClick={addDonation}>Donate {donationAmount} Ether</button>
-      </div>
-
-      <div>
-        { charitiesAddressList.includes(account) && (
-          <div>
-            Do you the charity? Withdraw your donations! 
-            <button onClick={withdraw}>Withdraw Donations!</button>
-          </div>
-        )}
-      </div>
-
-      
-      
-
-      <div>
-        Charities address list:
-        <ul>
-          {charitiesAddressList.map(
-            charity => (
-              <li>{charity}</li>
-            )
-          )
-          }
-        </ul>
-      </div>    
-
-      <div>
-        Charities Current Donations Balance:
-        <ul>
-          {charitiesDonationsList.map(
-            donation => (
-              <li>{donation}</li>
-            )
-          )
-          }
-        </ul>
-      </div> 
-
-
-      <div>
-        Charities Total Donations Balance:
-        <ul>
-          {charitiesTotalDonationsList.map(
-            totalDonations => (
-              <li>{totalDonations}</li>
-            )
-          )
-          }
-        </ul>
-      </div>
-
-
-       
-      
-      <div>
-        Donors Adress and their Donations:
-        <ul>
-          {donorsAddressList.map(
-            address => (
-              <li>{address}</li>
-            )
-          )
-          }
-        </ul>
-        <ul>
-          {donorsDonationsList.map(
-            donations => (
-              <li>{donations}</li>
-            )
-          )
-          }
-        </ul> 
-      </div> 
-
-      <div>
-        {errorMessage && (
-          <p style={{ color: 'red' }}>{errorMessage}</p>
-        )}
-      </div>
-  
-      <div>
-        { account === contractOwnerAddress && (    
-          <div>
-            New Charity's Name: 
-            <input value={newCharityName} onChange={handleNewCharityName}></input>
-            New Charit's Address:
-            <input value={newCharityAddress} onChange={handleNewCharityAddress}></input>
-            <button onClick={addCharity}>Add new charity</button>
-          </div>
-        )}
-      </div>
-      
-      <div>
-        { account === contractOwnerAddress && (
-        <div>  
-          Insert new contract owner:
-          <input value={newContractOwner} onChange={handleNewContractOwner}></input>
-          <button onClick={transferOwnership}>Change Contract Owner</button>
-        </div>
-        )}
-      </div>
+      </select>
+      <p>You selected: {selectedCharity}</p>
     
 
+    <div class="donation-form" id="donation-form">
+      Donation Amount: 
+      <input value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
+      <button onClick={addDonation}>Donate {donationAmount} Ether</button>
+    </div>
+    </div>
+
+    <div class="charities-table" id="charities-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Charity Name</th>
+        <th>Total Donations Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {charitiesNamesList.map((name, index) => (
+        <tr key={index}>
+          <td>{name}</td>
+          <td>{charitiesTotalDonationsList[index]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<div class="charities-table" id="charities-table">
+  {((charitiesAddressList.includes(account)) || (contractOwnerAddress==account)) && (
       <div>
-        Charities matched amounts:
-        <ul>
-          {charitiesMatchedAmountList.map(
-            amount => (
-              <li>{amount}</li>
-            )
-          )
-          }
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>Charity Name</th>
+              <th>Current Donations Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {charitiesNamesList.map((name, index) => (
+              <tr key={index}>
+                <td>{name}</td>
+                <td>
+                  
+                    <ul>
+                      {charitiesDonationsList[index]}
+                    </ul>
+                  
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    
-      <div>
-        { account === contractOwnerAddress && (
+    )}
+</div>
+
+
+    <div class="withdraw-donations" id="withdraw-donations">
+      { charitiesAddressList.includes(account) && (
         <div>
-          <button onClick={sendMatchedAmount}>Match All Amounts!</button>
+          Do you the charity? Withdraw your donations! 
+          <button onClick={withdraw}>Withdraw Donations!</button>
         </div>
+      )}
+    </div>
+
+    {/* <div class="charities-Names" id="charity-Names">
+      Charities names list:
+      <ul>
+        {charitiesNamesList.map(
+          name => (
+            <li>{name}</li>
+          )
         )}
-      </div>
-    
-    </div>   
-  );
+      </ul>
+    </div> */}
+
+
+
+    {/* <div class="charity-donations" id="charity-donations">
+        { ((charitiesAddressList.includes(account)) || (contractOwnerAddress==account)) && (
+        <div>
+          Charities Current Donations Balance:
+          <ul>
+            {charitiesDonationsList.map(
+            donation => (
+                <li>{donation}</li>
+              )
+            )}
+          </ul>
+        </div>
+      )}
+    </div> */}
+
+    {/* <div class="charity-total-donations" id="charity-total-donations">
+      Charities Total Donations Balance:
+      <ul>
+        {charitiesTotalDonationsList.map(
+          totalDonations => (
+            <li>{totalDonations}</li>
+          )
+        )}
+      </ul>
+    </div> */}
+
+<div className="donors-table" id="donors-table">
+  <h2>Donors Address and their Donations:</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Donor Address</th>
+        <th>Donation Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {donorsAddressList.map((address, index) => (
+        <tr key={index}>
+          <td>{address}</td>
+          <td>
+            <ul>
+              {donorsDonationsList[index]}
+            </ul>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+  
+    {/* <div className="donors-info">
+  <h2>Donors Address and their Donations:</h2>
+  <ul className="donors-address-list">
+    {donorsAddressList.map(
+      address => (
+        <li>{address}</li>
+      )
+    )}
+  </ul>
+  <ul className="donors-donations-list">
+    {donorsDonationsList.map(
+      donations => (
+        <li>{donations}</li>
+      )
+    )}
+  </ul> 
+  </div>  */}
+
+<div className="error-message">
+  {errorMessage && (
+    <p style={{ color: 'red' }}>{errorMessage}</p>
+  )}
+</div>
+
+<div className="new-charity-form">
+  { account === contractOwnerAddress && (    
+    <div>
+      <h2>New Charity's Name:</h2> 
+      <input id="newCharityName" value={newCharityName} onChange={handleNewCharityName}></input>
+      <h2>New Charit's Address:</h2>
+      <input id="newCharityAddress" value={newCharityAddress} onChange={handleNewCharityAddress}></input>
+      <button onClick={addCharity}>Add new charity</button>
+    </div>
+  )}
+</div>
+
+<div className="new-contract-owner-form">
+  { account === contractOwnerAddress && (
+    <div>  
+      <h2>Insert new contract owner:</h2>
+      <input id="newContractOwner" value={newContractOwner} onChange={handleNewContractOwner}></input>
+      <button onClick={transferOwnership}>Change Contract Owner</button>
+    </div>
+  )}
+</div>
+
+{/* <div className="charities-info">
+  <h2>Charities matched amounts:</h2>
+  <ul className="charities-matched-amount-list">
+    {charitiesMatchedAmountList.map(
+      amount => (
+        <li>{amount}</li>
+      )
+    )}
+  </ul>
+</div> */}
+
+<div className="charities-table" id="charities-table">
+  <h2>Charities and their Matched Amounts:</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Charity Name</th>
+        <th>Matched Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {charitiesNamesList.map((name, index) => (
+        <tr key={index}>
+          <td>{name}</td>
+          <td>
+            <ul>
+              {charitiesMatchedAmountList[index]}
+            </ul>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+<div className="matched-amount-button">
+  { account === contractOwnerAddress && (
+    <div>
+      <button onClick={sendMatchedAmount}>Match All Amounts!</button>
+    </div>
+  )}
+</div>
+
+
+
+
+
+
+
+
+  </div>
+);
 }
 
 export default App;
