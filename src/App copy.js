@@ -338,170 +338,11 @@ function App() {
   }
 
 
-// Retrun of the component ('jsx' code below), subject seperated by divs:
-//_______________________________________________________________________
-  
-//   return (
-//     <div className="App">
-//       <div> Current Balance is {balance} Ether </div>  
-      
-//       <div> Check that your account is {account} </div>  
-
-      
-
-//       <div>
-//         <label htmlFor="dropdown">Select a charity: </label>
-//         <select  id="dropdown" value={selectedCharity} onChange={handleSelectedCharity} >
-//         <option value="" disabled selected hidden>
-//           Select a charity...
-//         </option>
-//         {/* Map over options and create <option> elements */}
-//         {charitiesNamesList.map(
-//           option => (
-//           <option key={option} value={option}>
-//             {option}
-//           </option>
-//           )
-//         )}
-//         </select>
-//         <p>You selected: {selectedCharity}</p>
-//       </div>
-      
-//       <div>
-//         Donation Amount: 
-//         <input  value={donationAmount} type='number' min='0' onChange={handleDonationAmount}></input>
-//         <button onClick={addDonation}>Donate {donationAmount} Ether</button>
-//       </div>
-
-//       <div>
-//         { charitiesAddressList.includes(account) && (
-//           <div>
-//             Do you the charity? Withdraw your donations! 
-//             <button onClick={withdraw}>Withdraw Donations!</button>
-//           </div>
-//         )}
-//       </div>
-
-      
-      
-
-//       <div>
-        // Charity Name:
-        // <ul>
-        //   {charitiesNamesList.map(
-        //     charity => (
-        //       <li>{charity}</li>
-        //     )
-        //   )
-        //   }
-        // </ul>
-//       </div>    
-
-//       <div>
-        // Charities Current Donations Balance:
-        // <ul>
-        //   {charitiesDonationsList.map(
-        //     donation => (
-        //       <li>{donation}</li>
-        //     )
-        //   )
-        //   }
-        // </ul>
-//       </div> 
-
-
-//       <div>
-//         Charities Total Donations Balance:
-//         <ul>
-//           {charitiesTotalDonationsList.map(
-//             totalDonations => (
-//               <li>{totalDonations}</li>
-//             )
-//           )
-//           }
-//         </ul>
-//       </div>
-
-
-       
-      
-//       <div>
-        // Donors Adress and their Donations:
-        // <ul>
-        //   {donorsAddressList.map(
-        //     address => (
-        //       <li>{address}</li>
-        //     )
-        //   )
-        //   }
-        // </ul>
-        // <ul>
-        //   {donorsDonationsList.map(
-        //     donations => (
-        //       <li>{donations}</li>
-        //     )
-        //   )
-        //   }
-        // </ul> 
-//       </div> 
-
-//       <div>
-//         {errorMessage && (
-//           <p style={{ color: 'red' }}>{errorMessage}</p>
-//         )}
-//       </div>
-  
-//       <div>
-//         { account === contractOwnerAddress && (    
-//           <div>
-//             New Charity's Name: 
-//             <input value={newCharityName} onChange={handleNewCharityName}></input>
-//             New Charit's Address:
-//             <input value={newCharityAddress} onChange={handleNewCharityAddress}></input>
-//             <button onClick={addCharity}>Add new charity</button>
-//           </div>
-//         )}
-//       </div>
-      
-//       <div>
-//         { account === contractOwnerAddress && (
-//         <div>  
-//           Insert new contract owner:
-//           <input value={newContractOwner} onChange={handleNewContractOwner}></input>
-//           <button onClick={transferOwnership}>Change Contract Owner</button>
-//         </div>
-//         )}
-//       </div>
-    
-
-//       <div>
-        // Charities matched amounts:
-        // <ul>
-        //   {charitiesMatchedAmountList.map(
-        //     amount => (
-        //       <li>{amount}</li>
-        //     )
-        //   )
-        //   }
-        // </ul>
-//       </div>
-    
-//       <div>
-//         { account === contractOwnerAddress && (
-//         <div>
-//           <button onClick={sendMatchedAmount}>Match All Amounts!</button>
-//         </div>
-//         )}
-//       </div>
-    
-//     </div>   
-//   );
-// }
-     
+ // Retrun of the component ('jsx' code below), subject seperated by divs:
+ //_______________________________________________________________________
 
   return(
-<div className="App">
-     
+    <div className="App">
     
       <div class="charity-select" >
         <label>Select a charity: </label>
@@ -530,19 +371,18 @@ function App() {
         
          
         {((charitiesAddressList.includes(account)) || (contractOwnerAddress===account)) && (
-        <div class="withdraw-donations">  
-              Do you the charity? <br></br>
-              Withdraw your donations! 
-              <button onClick={withdraw}>Withdraw Donations!</button>
-        </div>
+          <div class="withdraw-donations">  
+            Do you the charity? <br></br>
+            Withdraw your donations! 
+            <button onClick={withdraw}>Withdraw Donations!</button>
+          </div>
         )}
 
         {errorMessage && (
-  <div className="error-message">
-    <p style={{ color: 'red' }}>Error message,<br/> {errorMessage}</p>
-  </div>
-)}
-
+          <div className="error-message">
+            <p style={{ color: 'red' }}>Error message,<br/> {errorMessage}</p>
+          </div>
+        )}
 
       </div>
 
@@ -636,33 +476,33 @@ function App() {
 
 
       {account === contractOwnerAddress && (
-  <div className='contract-owner-actions'>
-    <div className='new-charity'>
-      <div className="new-charity-form">
-        <h2>New Charity's Name:</h2> 
-        <input id="newCharityName" value={newCharityName} onChange={handleNewCharityName}></input>
-        <h2>,New Charit's Address:</h2>
-        <input id="newCharityAddress" value={newCharityAddress} onChange={handleNewCharityAddress}></input>
-        <button id='add-new-charity' onClick={addCharity}>Add new charity</button>
-      </div>
-    </div> 
-   
-    <div className='new-contract-owner'>
-      <div className="new-contract-owner-form">  
-        <h2>Insert new contract owner:</h2>
-        <input id="newContractOwner" value={newContractOwner} onChange={handleNewContractOwner}></input>
-        <button id='add-new-contract-owner' onClick={transferOwnership}>Change Contract Owner</button>
-      </div>
-    </div>
+        <div className='contract-owner-actions'>
+          <div className='new-charity'>
+            <div className="new-charity-form">
+              <h2>New Charity's Name:</h2> 
+              <input id="newCharityName" value={newCharityName} onChange={handleNewCharityName}></input>
+              <h2>,New Charit's Address:</h2>
+              <input id="newCharityAddress" value={newCharityAddress} onChange={handleNewCharityAddress}></input>
+              <button id='add-new-charity' onClick={addCharity}>Add new charity</button>
+            </div>
+          </div> 
+      
+          <div className='new-contract-owner'>
+            <div className="new-contract-owner-form">  
+              <h2>Insert new contract owner:</h2>
+              <input id="newContractOwner" value={newContractOwner} onChange={handleNewContractOwner}></input>
+              <button id='add-new-contract-owner' onClick={transferOwnership}>Change Contract Owner</button>
+            </div>
+          </div>
 
-    <div className="matched-amount-button">
-      <div>
-        <h2>Contract Owner?</h2>
-        <button id='match-all-amounts' onClick={sendMatchedAmount}>Match All Amounts!</button>
-      </div>
-    </div>
-  </div>
-)}
+          <div className="matched-amount-button">
+            <div>
+              <h2>Contract Owner?</h2>
+              <button id='match-all-amounts' onClick={sendMatchedAmount}>Match All Amounts!</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
