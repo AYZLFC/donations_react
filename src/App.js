@@ -501,7 +501,8 @@ function App() {
 
   return(
 <div className="App">
-     
+      <img src="https://cdn.givingcompass.org/wp-content/uploads/2018/02/01102409/hand-up-not-hand-out1.jpg" />
+      
     
       <div class="charity-select" >
         <label>Select a charity: </label>
@@ -531,7 +532,7 @@ function App() {
          
         {((charitiesAddressList.includes(account)) || (contractOwnerAddress===account)) && (
         <div class="withdraw-donations">  
-              Do you the charity? <br></br>
+              Are you the charity owner? <br></br>
               Withdraw your donations! 
               <button onClick={withdraw}>Withdraw Donations!</button>
         </div>
@@ -570,24 +571,7 @@ function App() {
 
         
 
-        <div className='tables' id='donor-donations'>
-            <table>
-              <thead>
-                <tr>
-                  <th>Donor Address</th>
-                  <th>Donor Donations</th>
-                </tr>
-              </thead>
-              <tbody>
-                {donorsAddressList.map((address, index) => (
-                  <tr key={index}>
-                    <td>{address}</td>
-                    <td>{donorsDonationsList[index]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-        </div>
+        
 
         
 
@@ -609,6 +593,8 @@ function App() {
             </tbody>
           </table>
         </div>
+
+        
 
         <div className='tables' id='current-balance'>
           {((charitiesAddressList.includes(account)) || (contractOwnerAddress===account)) && (
@@ -632,7 +618,30 @@ function App() {
             </div>
           )}
         </div>
+
+        <div className='tables' id='donor-donations'>
+            <table>
+              <thead>
+                <tr>
+                  <th>Donor Address</th>
+                  <th>Donor Donations</th>
+                </tr>
+              </thead>
+              <tbody>
+                {donorsAddressList.map((address, index) => (
+                  <tr key={index}>
+                    <td>{address}</td>
+                    <td>{donorsDonationsList[index]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
       </div>
+      </div>
+    
+      
+                    
+      
 
 
       {account === contractOwnerAddress && (
@@ -641,7 +650,7 @@ function App() {
       <div className="new-charity-form">
         <h2>New Charity's Name:</h2> 
         <input id="newCharityName" value={newCharityName} onChange={handleNewCharityName}></input>
-        <h2>,New Charit's Address:</h2>
+        <h2>,New Charity's Address:</h2>
         <input id="newCharityAddress" value={newCharityAddress} onChange={handleNewCharityAddress}></input>
         <button id='add-new-charity' onClick={addCharity}>Add new charity</button>
       </div>
@@ -663,6 +672,8 @@ function App() {
     </div>
   </div>
 )}
+
+
     </div>
   )
 }
