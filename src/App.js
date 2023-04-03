@@ -338,7 +338,7 @@ function App() {
   }
 
 
-// Retrun of the component ('jsx' code below), subject seperated by divs:
+// Retrun of the component (Raw 'jsx' code below before design), subjects seperated by divs:
 //_______________________________________________________________________
   
 //   return (
@@ -499,6 +499,9 @@ function App() {
 // }
      
 
+
+// Retrun of the component ('jsx' code below with design elements):
+//_________________________________________________________________
   return(
 <div className="App">
       <img src="https://cdn.givingcompass.org/wp-content/uploads/2018/02/01102409/hand-up-not-hand-out1.jpg" />
